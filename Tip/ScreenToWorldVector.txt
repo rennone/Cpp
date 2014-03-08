@@ -1,0 +1,41 @@
+スクリーン上の点からワールド空間における方向ベクトルへの変換
+
+width, height : 画面サイズ
+sx, sy : スクリーン状の点(左上原点)
+position : カメラの位置(3次元ベクトル)
+look     : カメラの見ている位置(3次元ベクトル)
+up       : カメラの回転, カメラのどこが上になるか(3次元ベクトル)
+fov      : 縦方向の視野角(ラジアン, 0~PI)
+ratio    : 横幅/縦幅
+near     : 視錐台の手前の平面までの距離  //どっちかしか使わない
+far     : 視錐台の奥の平面までの距離
+
+1. スクリーン座標を -0.5~0.5に正規化, 左下を原点に変換
+normalSx = sx/width-0.5
+normalSy = 0.5-sy/height
+
+2. near平面での画面のサイズを計算 (今回はnearを使う)
+nearHeight = 2*height*tan(fov/2) // 0~PIまでの範囲だから, 角度を半分, それだと, 上半分の高さなので2倍する
+nearWidth  = nearHeight*ratio   
+
+3. near平面における, スクリーン座標を計算
+nearSx = normalSx*nearWidth
+nearSy = normalSy*nearHeight
+
+
+カメラの向いている方向をz軸として, x,y軸に相当する物を計算する
+4. カメラの向いている方向を計算して正規化, (奥行きなのでz軸に相当)
+Zaxis = look - position
+Zaxis.normalize()  //正規化の関数という設定
+
+5. この方向を向いているときのカメラの上方向を計算(upをZaxisを法線とする平面へ写像する), y軸に相当
+Yaxis = up - Zaxis.dot(up)*Zaxis; //dot=>内積
+Yaxis.normalize()
+
+6. Yaxis, Zaxisで外積を取ってXaxisを計算
+Xaxis = Zaxis.cross(Yaxis)  //右を正にするために(スクリーン座標がそうだから)Z->Yの順番
+Xaxis.normalize()
+
+6. nearSx-> Xaxis成分, nearSy->Yaxis成分, near -> Zaxis成分なのでそれからけいさんすればおしまい
+
+worldVector = Xaxis*nearSx + Yaxis*nearSy + Zaxis*near
