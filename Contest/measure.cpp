@@ -3,8 +3,9 @@
 #include<sys/time.h>
 using namespace std;
 const int NUM = 1000000;
-int measures[NUM];
+int measures[NUM+1];
 
+//公約数を数えるアルゴリズム
 void count1()
 {
   memset(measures,0, sizeof(measures));
@@ -17,6 +18,7 @@ void count1()
   }
 }
 
+//??
 void count2()
 {
   memset(measures,0, sizeof(measures));

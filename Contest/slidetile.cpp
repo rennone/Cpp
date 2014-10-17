@@ -49,13 +49,12 @@ bool calc(int limit, int n, int blankI, int blankJ){
   
   if(evaluate() == 0)
     return true;  //現在の状態がゴールならtrue
-
   
   if(n + evaluate() > limit)
     return false;  //今までの手数 + ここからゴールまでにかかる最低手数がlimitを超えるならfalse 
 
   long long state = toLongLong(); //現在のタイルの情報をlong longに変換 
-  if(closedList.count(state) != 0) //既にしらべべて居たら, false 
+  if(closedList.count(state) != 0) //既にしらべて居たら, false 
     return false;
 
   closedList[state] = true; //探索済みにする. 
